@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página do Administrador</title>
+    <link rel="stylesheet" href="css/ver_cadastros.css" />
+  </head>
+  <body>
+    <!-- Container Principal -->
+    <!-- Interface administrativa para gerenciamento de usuários -->
+    <div class="container">
+      <div class="card">
+        <h1>Lista de Cadastros</h1>
+
+        <!-- Barra de Pesquisa -->
+        <!-- Filtro em tempo real dos cadastros por nome -->
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar por nome..."
+          oninput="filtrarCadastros()"
+        />
+
+        <!-- Lista de Usuários Cadastrados -->
+        <!-- Container dinâmico para exibição dos cadastros -->
+        <div id="listaCadastros"></div>
+
+        <!-- Navegação -->
+        <div class="justify-center">
+          <a href="index.html">Voltar para Cadastro</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Variável global para controlar o índice em edição
+      let editandoIndex = null;
+      // Lista de índices reais dos cadastros exibidos (usada na busca)
+      let indicesVisiveis = [];
+
+      /**
+       * Exibe a lista de cadastros na interface
+       * @param {Array} cadastros - Array de objetos com dados dos usuários
+       * @param {Array} indicesOriginais - Índices reais dos cadastros no localStorage
+       */
+      function exibirCadastros(cadastros, indicesOriginais = null) {
+        const listaCadastros = document.getElementById("listaCadastros");
+        listaCadastros.innerHTML = "";
+
+        // Atualiza os índices visíveis
+        indicesVisiveis = indicesOriginais || cadastros.map((_, i) => i);
+
+        // Mensagem para lista vazia
+        if (cadastros.length === 0) {
+          listaCadastros.innerHTML = "<p>Nenhum cadastro encontrado.</p>";
+          return;
+        }
+
+        // Renderiza cada cadastro com suas ações
+        cadastros.forEach((usuario, i) => {
+          const indexReal = indicesVisiveis[i];
+          if (editandoIndex === indexReal) {
+            // Modo edição
+            listaCadastros.innerHTML += `
+          <div>
+            <p>
+              <b>Nome completo:</b>
+              <input type="text" id="editNome" value="${usuario.nome}" />
+              <br>
+              <b>Email:</b>
+              <input type="email" id="editEmail" value="${usuario.email}" />
+            </p>
+            <button onclick="salvarEdicao(${indexReal})">Salvar</button>
+            <button onclick="cancelarEdicao()">Cancelar</button>
+          </div>
+          <hr><br>
+        `;
+          } else {
+            // Visualização normal
+            listaCadastros.innerHTML += `
+          <div>
+            <p><b>Nome completo:</b> ${usuario.nome} <br><b>Email:</b> ${usuario.email}</p> 
+            <button onclick="editarCadastro(${indexReal})">Editar</button>   
+            <button onclick="excluirCadastro(${indexReal})">Excluir</button>
+          </div>
+          <hr><br>
+        `;
+          }
+        });
+      }
+
+      /**
+       * Filtra os cadastros com base no texto digitado
+       * Atualiza a lista em tempo real
+       */
+      function filtrarCadastros() {
+        const searchInput = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+        const cadastrosFiltrados = [];
+        const indicesOriginais = [];
+        cadastros.forEach((usuario, i) => {
+          if (usuario.nome.toLowerCase().includes(searchInput)) {
+            cadastrosFiltrados.push(usuario);
+            indicesOriginais.push(i);
+          }
+        });
+        exibirCadastros(cadastrosFiltrados, indicesOriginais);
+      }
+
+      /**
+       * Remove um cadastro do sistema
+       * @param {number} index - Índice do cadastro a ser removido
+       */
+      function excluirCadastro(index) {
+        const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+        cadastros.splice(index, 1);
+        localStorage.setItem("cadastros", JSON.stringify(cadastros));
+        editandoIndex = null;
+        exibirCadastros(cadastros);
+      }
+
+      /**
+       * Ativa o modo de edição para um cadastro
+       * @param {number} index - Índice do cadastro a ser editado
+       */
+      function editarCadastro(index) {
+        editandoIndex = index;
+        const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+        exibirCadastros(cadastros);
+      }
+
+      /**
+       * Salva as alterações feitas em um cadastro editado
+       * @param {number} index - Índice do cadastro a ser salvo
+       */
+      function salvarEdicao(index) {
+        const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+        const novoNome = document.getElementById("editNome").value.trim();
+        const novoEmail = document.getElementById("editEmail").value.trim();
+
+        if (!novoNome || !novoEmail) {
+          alert("Preencha todos os campos!");
+          return;
+        }
+
+        cadastros[index].nome = novoNome;
+        cadastros[index].email = novoEmail;
+        localStorage.setItem("cadastros", JSON.stringify(cadastros));
+        editandoIndex = null;
+        exibirCadastros(cadastros);
+      }
+
+      /**
+       * Cancela a edição e volta para a visualização normal
+       */
+      function cancelarEdicao() {
+        editandoIndex = null;
+        const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+        exibirCadastros(cadastros);
+      }
+
+      // Inicialização: Carrega e exibe os cadastros
+      window.onload = () => {
+        const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+        exibirCadastros(cadastros);
+      };
+    </script>
+  </body>
+</html>

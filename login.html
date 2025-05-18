@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css" />
+    <script src="login.js" defer></script>
+  </head>
+  <body>
+    <!-- Container Principal -->
+    <!-- Contém o formulário de login em um card centralizado -->
+    <div class="container">
+      <div class="card">
+        <h1>Login</h1>
+
+        <!-- Formulário de Login -->
+        <!-- Campos de entrada para autenticação -->
+        
+        <!-- Campo: Email do Usuário -->
+        <div class="label-float">
+          <label for="email">Email:</label>
+          <input
+            type="text"
+            id="email"
+            placeholder="Insira seu email"
+            required
+          />
+        </div>
+
+        <!-- Campo: Senha do Usuário -->
+        <div class="label-float">
+          <label for="senha">Senha:</label>
+          <input
+            type="password"
+            id="senha"
+            placeholder="Insira sua senha"
+            required
+          />
+        </div>
+
+        <!-- Área de Ações -->
+        <!-- Botão de login e link para cadastro -->
+        <div class="justify-center">
+          <button id="btnEntrar">Entrar</button>
+        </div>
+        <br />
+        <div class="justify-center">
+          <a href="index.html">Ainda não possui login?</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================
+      // Manipulação do Formulário de Login
+      // ==========================================
+
+      document
+        .getElementById("btnEntrar")
+        .addEventListener("click", function () {
+          // Coleta e limpa os dados do formulário
+          const email = document.getElementById("email").value.trim();
+          const senha = document.getElementById("senha").value.trim();
+
+          // Validação dos campos obrigatórios
+          if (!email || !senha) {
+            alert("Por favor, preencha todos os campos.");
+            return;
+          }
+
+          /* Validações adicionais (comentadas)
+          // Validação do formato de email
+          // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          // if (!emailRegex.test(email)) {
+          //     alert("Por favor, insira um email válido.");
+          //     return;
+          // }
+
+          // Validação do tamanho da senha
+          // if (senha.length < 6) {
+          //     alert("A senha deve ter pelo menos 6 caracteres.");
+          //     return;
+          // }
+          */
+
+          // Autenticação do usuário
+          const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+          const usuario = cadastros.find(
+            (user) => user.email === email && user.senha === senha
+          );
+
+          // Verificação de credenciais
+          if (!usuario) {
+            alert("Email ou senha inválidos. Tente novamente.");
+            return;
+          }
+
+          // Gerenciamento da sessão do usuário
+          const lastUser = { 
+            name: usuario.nome, 
+            email: usuario.email 
+          };
+          localStorage.setItem("lastUser", JSON.stringify(lastUser));
+
+          // Redirecionamento baseado no tipo de usuário
+          if (email.includes("@admin")) {
+            // Administrador: Acesso à área administrativa
+            window.location.href = "ver_cadastros.html";
+          } else {
+            // Usuário comum: Acesso à área de perfil
+            window.location.href = "perfil.html";
+          }
+        });
+    </script>
+  </body>
+</html>

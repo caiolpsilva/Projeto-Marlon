@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="css/cadastro.css" />
+    <script src="cadastro.js" defer></script>
+  </head>
+  <body>
+    <!-- Container Principal -->
+    <!-- Contém todo o formulário de cadastro em um card centralizado -->
+    <div class="container">
+      <div class="card">
+        <h1>Cadastro</h1>
+
+        <!-- Formulário de Cadastro -->
+        <!-- Campos de entrada para informações do usuário -->
+
+        <!-- Campo: Nome do Usuário -->
+        <div class="label-float">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" placeholder="Insira seu nome" required />
+        </div>
+
+        <!-- Campo: Email do Usuário -->
+        <div class="label-float">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Insira seu email"
+            required
+          />
+        </div>
+
+        <!-- Campo: Senha do Usuário -->
+        <!-- Inclui área para exibição de mensagens de erro -->
+        <div class="label-float">
+          <label for="senha">Senha:</label>
+          <input
+            type="password"
+            id="senha"
+            placeholder="Insira sua senha"
+            required
+          />
+          <span class="error" id="senhaError" style="color: red"></span>
+        </div>
+
+        <!-- Área de Ações -->
+        <!-- Botão de cadastro e link para login -->
+        <div class="justify-center">
+          <button id="btnCadastrar">Cadastrar</button>
+        </div>
+        <br />
+        <div class="justify-center">
+          <a href="login.html">Já possui cadastro?</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================
+      // Manipulação do Formulário de Cadastro
+      // ==========================================
+
+      // Event Listener para o botão de cadastro
+      document
+        .getElementById("btnCadastrar")
+        .addEventListener("click", function (event) {
+          // Previne o comportamento padrão do formulário
+          event.preventDefault();
+
+          // Coleta os dados do formulário
+          const nome = document.getElementById("nome").value;
+          const email = document.getElementById("email").value;
+          const senha = document.getElementById("senha").value;
+          const senhaError = document.getElementById("senhaError");
+
+          // Criação do objeto usuário com os dados coletados
+          const usuario = {
+            nome: nome,
+            email: email,
+            senha: senha,
+          };
+
+          // Gerenciamento do LocalStorage
+          // Recupera cadastros existentes ou cria novo array
+          const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+          cadastros.push(usuario);
+          localStorage.setItem("cadastros", JSON.stringify(cadastros));
+
+          // Feedback e limpeza do formulário
+          alert("Usuário cadastrado com sucesso!");
+          document.getElementById("nome").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("senha").value = "";
+
+          // Redirecionamento após cadastro
+          window.location.href = "login.html";
+        });
+
+      // ==========================================
+      // Sistema de Edição de Cadastro
+      // ==========================================
+
+      // Carrega dados para edição quando a página é iniciada
+      window.onload = function () {
+        // Recupera dados do usuário em edição
+        const usuarioEdit = JSON.parse(localStorage.getItem("usuarioEdit"));
+        const usuarioEditIndex = localStorage.getItem("usuarioEditIndex");
+
+        // Se existir um usuário para edição, preenche o formulário
+        if (usuarioEdit) {
+          // Preenche os campos com os dados existentes
+          document.getElementById("nome").value = usuarioEdit.nome;
+          document.getElementById("email").value = usuarioEdit.email;
+          document.getElementById("senha").value = usuarioEdit.senha;
+
+          // Limpa os dados de edição do localStorage
+          localStorage.removeItem("usuarioEdit");
+        }
+      };
+    </script>
+  </body>
+</html>

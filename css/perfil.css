@@ -1,0 +1,196 @@
+/* Importa a fonte Poppins do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Variáveis globais para cores, bordas e sombra */
+:root {
+    --bg: #0b3455;           /* Cor de fundo principal */
+    --primary: #000732;      /* Cor primária */
+    --secondary: #011b32;    /* Cor secundária */
+    --success: #28a745;      /* Cor para sucesso */
+    --danger: #dc3545;       /* Cor para erro */
+    --light: #ffffff;        /* Branco */
+    --dark: #343a40;         /* Cinza escuro */
+    --border-radius: 10px;   /* Raio da borda */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+/* Reset de margens, paddings e box-sizing para todos os elementos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo do body da página de perfil */
+body.bodyPerfil {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg);
+    color: var(--dark);
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Blocos de informações do usuário e formulário de edição */
+#user-info,
+#edit-form {
+    background-color: var(--light);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 350px;
+}
+
+/* Títulos das seções */
+h2 {
+    margin-bottom: 15px;
+    color: var(--primary);
+}
+
+/* Inputs de texto e email */
+input[type="text"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+/* Botões padrão */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+/* Botão de editar e buscar */
+#edit-button, #search-button {
+    background-color: var(--primary);
+    color: var(--light);
+}
+#edit-button:hover, #search-button:hover {
+    background-color: #0056b3;
+}
+
+/* Botão de salvar */
+#save-button {
+    background-color: var(--success);
+    color: var(--light);
+}
+#save-button:hover {
+    background-color: #218838;
+}
+
+/* Botão de cancelar */
+#cancel-button {
+    background-color: var(--danger);
+    color: var(--light);
+}
+#cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* Painel lateral para busca e favoritos */
+#right-panel {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1000px;
+    justify-content: space-between;
+}
+
+/* Seções de busca e favoritos */
+#search-section,
+#favorites-section {
+    background-color: var(--light);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    flex: 1;
+    min-width: 300px;
+    max-width: 48%;
+}
+
+/* Grid para exibir resultados e favoritos */
+#book-results,
+#favorite-books {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Estilo dos cards de livros */
+.book {
+    background-color: #e9f5ff;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+.book:hover {
+    transform: scale(1.03);
+    background-color: #d2ecff;
+}
+.book img {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+/* Botão para favoritar livro */
+.book button.favorite {
+    background-color: var(--success);
+    color: white;
+    padding: 5px;
+    width: 100%;
+    font-size: 11px;
+    margin-top: 5px;
+}
+.book button.favorite:hover {
+    background-color: #218838;
+}
+
+/* Botão para remover favorito */
+.book button.remove {
+    background-color: var(--danger);
+    color: white;
+    padding: 5px;
+    width: 100%;
+    font-size: 11px;
+    margin-top: 5px;
+}
+.book button.remove:hover {
+    background-color: #c82333;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    #right-panel {
+      flex-direction: column;
+    }
+
+    #search-section,
+    #favorites-section,
+    #user-info,
+    #edit-form {
+      max-width: 100%;
+    }
+
+    #book-results,
+    #favorite-books {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}

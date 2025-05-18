@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Título da página -->
+    <title>Perfil do Usuário</title>
+    <link rel="stylesheet" href="css/perfil.css" />
+  </head>
+  <body
+    class="bodyPerfil"
+    style="display: flex; align-items: flex-start; justify-content: flex-start"
+  >
+    <!-- Seção de Informações do Usuário -->
+    <!-- Exibe os dados do perfil atual -->
+    <div id="user-info">
+      <h2>Perfil:</h2>
+      <p><strong>Nome:</strong> <span id="user-name"></span></p>
+      <p><strong>Email:</strong> <span id="user-email"></span></p>
+      <button id="edit-button">Editar Perfil</button>
+    </div>
+
+    <!-- Formulário de Edição -->
+    <!-- Permite atualizar as informações do perfil -->
+    <div id="edit-form" style="display: none">
+      <h2>Editar Perfil</h2>
+      
+      <!-- Campo: Nome -->
+      <div class="label-float">
+        <label for="edit-name">Nome:</label>
+        <input type="text" id="edit-name" placeholder="Insira seu nome" />
+      </div>
+
+      <!-- Campo: Email -->
+      <div class="label-float">
+        <label for="edit-email">Email:</label>
+        <input type="email" id="edit-email" placeholder="Insira seu email" />
+      </div>
+
+      <!-- Botões de Ação -->
+      <button id="save-button">Salvar Alterações</button>
+      <button id="cancel-button">Cancelar</button>
+    </div>
+
+    <!-- Painel Lateral -->
+    <!-- Contém funcionalidades adicionais -->
+    <div id="right-panel">
+      <!-- Sistema de Busca de Livros -->
+      <div id="search-section">
+        <h2>Busca de Livros</h2>
+        <input type="text" id="search-input" placeholder="Buscar livros..." />
+        <button id="search-button">Buscar</button>
+        <div id="book-results"></div>
+      </div>
+
+      <!-- Sistema de Favoritos -->
+      <div id="favorites-section">
+        <h2>Meus Livros Favoritos</h2>
+        <div id="favorite-books"></div>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================
+      // Gerenciamento do Perfil do Usuário
+      // ==========================================
+
+      /**
+       * Carrega e exibe as informações do usuário atual
+       */
+      function loadLastUser() {
+        const lastUser = JSON.parse(localStorage.getItem("lastUser"));
+
+        if (lastUser) {
+          document.getElementById("user-name").innerText =
+            lastUser.name || "Nome não disponível";
+          document.getElementById("user-email").innerText =
+            lastUser.email || "Email não disponível";
+        } else {
+          document.getElementById("user-name").innerText =
+            "Nenhum usuário encontrado.";
+          document.getElementById("user-email").innerText = "";
+        }
+      }
+
+      /**
+       * Habilita o formulário de edição do perfil
+       */
+      function enableEditForm() {
+        const lastUser = JSON.parse(localStorage.getItem("lastUser"));
+
+        if (lastUser) {
+          document.getElementById("edit-name").value = lastUser.name || "";
+          document.getElementById("edit-email").value = lastUser.email || "";
+        }
+        document.getElementById("user-info").style.display = "none";
+        document.getElementById("edit-form").style.display = "block";
+      }
+
+      /**
+       * Salva as alterações feitas no perfil
+       */
+      function saveUserChanges() {
+        const newName = document.getElementById("edit-name").value.trim();
+        const newEmail = document.getElementById("edit-email").value.trim();
+
+        if (!newName || !newEmail) {
+          alert("Por favor, preencha todos os campos.");
+          return;
+        }
+
+        const updatedUser = { name: newName, email: newEmail };
+        localStorage.setItem("lastUser", JSON.stringify(updatedUser));
+        
+        alert("Perfil atualizado com sucesso!");
+        document.getElementById("user-info").style.display = "block";
+        document.getElementById("edit-form").style.display = "none";
+        loadLastUser();
+      }
+
+      /**
+       * Cancela a edição do perfil
+       */
+      function cancelEdit() {
+        document.getElementById("user-info").style.display = "block";
+        document.getElementById("edit-form").style.display = "none";
+      }
+
+      // ==========================================
+      // Sistema de Busca e Favoritos
+      // ==========================================
+
+      /**
+       * Realiza busca de livros na API do Google Books
+       */
+      function searchBooks() {
+        const query = document.getElementById("search-input").value;
+        const url = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => displayBooks(data.items))
+          .catch((error) => console.error("Erro ao buscar livros:", error));
+      }
+
+      /**
+       * Exibe os resultados da busca de livros
+       * @param {Array} books - Array de livros retornados pela API
+       */
+      function displayBooks(books) {
+        const resultsDiv = document.getElementById("book-results");
+        resultsDiv.innerHTML = "";
+
+        if (books) {
+          books.forEach((book) => {
+            const bookDiv = document.createElement("div");
+            bookDiv.className = "book";
+            
+            const imageUrl = book.volumeInfo.imageLinks?.thumbnail ||
+                           "https://via.placeholder.com/100x150";
+            const title = book.volumeInfo.title || "Título não disponível";
+            const bookId = book.id || null;
+
+            if (!bookId || !title || !imageUrl) {
+              console.warn("Livro com dados incompletos ignorado:", book);
+              return;
+            }
+
+            bookDiv.innerHTML = `
+              <img src="${imageUrl}" alt="${title}"> 
+              <strong>${title}</strong>
+              <button class="favorite" onclick="toggleFavorite('${bookId}', '${title}', '${imageUrl}')">
+                Favoritar
+              </button>
+            `;
+            resultsDiv.appendChild(bookDiv);
+          });
+        } else {
+          resultsDiv.innerHTML = "Nenhum livro encontrado.";
+        }
+      }
+
+      /**
+       * Gerencia a adição/remoção de livros favoritos
+       * @param {string} bookId - ID do livro
+       * @param {string} bookTitle - Título do livro
+       * @param {string} bookImage - URL da imagem do livro
+       */
+      function toggleFavorite(bookId, bookTitle, bookImage) {
+        if (!bookId || !bookTitle || !bookImage) {
+          alert("Erro: Dados do livro incompletos.");
+          return;
+        }
+
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const favoriteIndex = favorites.findIndex((fav) => fav.id === bookId);
+
+        if (favoriteIndex > -1) {
+          favorites.splice(favoriteIndex, 1);
+          alert("Livro removido dos favoritos!");
+        } else {
+          favorites.push({ id: bookId, title: bookTitle, image: bookImage });
+          alert("Livro adicionado aos favoritos!");
+        }
+        
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        displayFavorites();
+      }
+
+      /**
+       * Exibe a lista de livros favoritos
+       */
+      function displayFavorites() {
+        const favoritesDiv = document.getElementById("favorite-books");
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+        // Remove livros com dados incompletos
+        favorites = favorites.filter((fav) => fav.id && fav.title && fav.image);
+        favoritesDiv.innerHTML = "";
+
+        favorites.forEach((favorite) => {
+          const bookDiv = document.createElement("div");
+          bookDiv.className = "book";
+          bookDiv.innerHTML = `
+            <img src="${favorite.image}" alt="${favorite.title}">
+            <strong>${favorite.title}</strong>
+            <button class="remove" onclick="removeFavorite('${favorite.id}')">
+              Remover
+            </button>
+          `;
+          favoritesDiv.appendChild(bookDiv);
+        });
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+      }
+
+      /**
+       * Remove um livro dos favoritos
+       * @param {string} bookId - ID do livro a ser removido
+       */
+      function removeFavorite(bookId) {
+        if (!bookId) {
+          alert("Erro: ID do livro inválido.");
+          return;
+        }
+
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        favorites = favorites.filter((fav) => fav.id !== bookId);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        displayFavorites();
+      }
+
+      // ==========================================
+      // Inicialização
+      // ==========================================
+      
+      // Event Listeners
+      document.getElementById("search-button").addEventListener("click", searchBooks);
+      document.getElementById("edit-button").addEventListener("click", enableEditForm);
+      document.getElementById("save-button").addEventListener("click", saveUserChanges);
+      document.getElementById("cancel-button").addEventListener("click", cancelEdit);
+
+      // Carregamento inicial
+      displayFavorites();
+      loadLastUser();
+    </script>
+  </body>
+</html>

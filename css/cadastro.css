@@ -1,0 +1,132 @@
+/* Estilo para página de Cadastro */
+
+/* Importa a fonte Poppins do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Variáveis CSS para cores, bordas e sombras */
+:root {
+    --bg: #0b3455;           /* Cor de fundo principal */
+    --primary: #000732;      /* Cor primária */
+    --secondary: #011b32;    /* Cor secundária */
+    --success: #28a745;      /* Cor para sucesso */
+    --danger: #dc3545;       /* Cor para erro */
+    --light: #ffffff;        /* Branco */
+    --dark: #343a40;         /* Cinza escuro */
+    --border-radius: 10px;   /* Raio da borda */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+/* Estilo geral do body: centraliza conteúdo e aplica fonte/cor de fundo */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg);
+    color: var(--dark);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container principal com largura máxima e padding */
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* Cartão centralizado com fundo branco, borda arredondada e sombra */
+.card {
+    background-color: var(--light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px 25px;
+}
+
+/* Título centralizado e com cor primária */
+.card h1 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 25px;
+}
+
+/* Layout dos campos de formulário (label + input) */
+.label-float {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+/* Estilo do label dos campos */
+.label-float label {
+    margin-bottom: 5px;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* Estilo dos inputs do formulário */
+.label-float input {
+    padding: 10px;
+    border-radius: var(--border-radius);
+    border: 1px solid #ccc;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Borda do input muda ao focar */
+.label-float input:focus {
+    border-color: var(--primary);
+}
+
+/* Centraliza elementos (ex: botão de navegação) */
+.justify-center {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Botão de cadastro estilizado */
+button#btnCadastrar {
+    background-color: var(--primary);
+    color: var(--light);
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+/* Efeito hover no botão de cadastro */
+button#btnCadastrar:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo dos links */
+a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* Sublinhar link ao passar o mouse */
+a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagem de erro */
+.error {
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 5px;
+}
+
+/* Responsividade: reduz o padding do card em telas pequenas */
+@media (max-width: 500px) {
+    .card {
+      padding: 20px;
+    }
+}

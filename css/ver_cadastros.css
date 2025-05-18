@@ -1,0 +1,151 @@
+/* Importa a fonte Poppins do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700;900&display=swap');
+
+/* Variáveis globais para cores, bordas e sombra */
+:root {
+  --bg: #0b3455;           /* Cor de fundo principal */
+  --primary: #000732;      /* Cor primária */
+  --secondary: #011b32;    /* Cor secundária */
+  --success: #28a745;      /* Cor para sucesso */
+  --danger: #dc3545;       /* Cor para erro */
+  --light: #ffffff;        /* Branco */
+  --dark: #343a40;         /* Cinza escuro */
+  --border-radius: 10px;   /* Raio da borda */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+/* Reset de margens, paddings e fonte para todos os elementos */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Estilo geral do body: centraliza conteúdo e aplica fonte/cor de fundo */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Container principal com largura máxima */
+.container {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Cartão centralizado com fundo branco, borda arredondada e sombra */
+.card {
+  background-color: var(--light);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+/* Título centralizado e com cor primária */
+.card h1 {
+  color: var(--primary);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Espaçamento inferior para a lista de cadastros */
+#listaCadastros {
+  margin-bottom: 20px;
+}
+
+/* Estilo dos blocos de cada cadastro */
+#listaCadastros div {
+  background-color: #e9f5ff;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+
+/* Estilo do campo de busca */
+#searchInput{
+  padding: 6px 6px;
+  margin-right: 8px;
+  border-radius:10px;
+  border:#0b3455 2px solid;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Espaçamento inferior para o texto do cadastro */
+#listaCadastros p {
+  margin-bottom: 10px;
+}
+
+/* Estilo dos botões de ação (Editar/Excluir) */
+#listaCadastros button {
+  padding: 8px 12px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Botão Editar */
+#listaCadastros button:nth-child(2) {
+  background-color: var(--success);
+  color: var(--light);
+}
+
+/* Hover do botão Editar */
+#listaCadastros button:nth-child(2):hover {
+  background-color: #218838;
+}
+
+/* Botão Excluir */
+#listaCadastros button:nth-child(3) {
+  background-color: var(--danger);
+  color: var(--light);
+}
+
+/* Hover do botão Excluir */
+#listaCadastros button:nth-child(3):hover {
+  background-color: #c82333;
+}
+
+/* Centraliza elementos de navegação */
+.justify-center {
+  text-align: center;
+}
+
+/* Estilo dos links */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+/* Sublinhar link e mudar cor ao passar o mouse */
+a:hover {
+  color: #003a80;
+  text-decoration: underline;
+}
+
+/* Responsivo: ajustes para telas menores */
+@media (max-width: 600px) {
+  .card {
+    padding: 20px;
+  }
+
+  #listaCadastros button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
