@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página do Administrador</title>
     <link rel="stylesheet" href="css/ver_cadastros.css" />
+    <style>
+      /* Estilização para o botão Adicionar */
+      #toggleAddUserButton {
+        background-color: var(--primary);
+        color: var(--light);
+        padding: 10px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+      }
+      #toggleAddUserButton:hover {
+        background-color: #0056b3;
+      }
+      /* Esconde o formulário inicialmente */
+      #addUserFormContainer {
+        display: none;
+        margin-top: 15px;
+      }
+    </style>
   </head>
   <body>
     <!-- Container Principal -->
@@ -29,6 +51,21 @@
         <!-- Navegação -->
         <div class="justify-center">
           <a href="index.html">Voltar para Cadastro</a>
+        </div>
+
+        <!-- Botão para mostrar/ocultar o formulário de adicionar usuário -->
+        <div style="text-align: center;">
+          <button id="toggleAddUserButton" onclick="toggleAddUserForm()">Adicionar</button>
+        </div>
+
+        <!-- Container do formulário para adicionar novo usuário -->
+        <div id="addUserFormContainer">
+          <form id="addUserForm" onsubmit="adicionarUsuario(event)">
+            <input type="text" id="nomeNovo" placeholder="Nome completo" required />
+            <input type="email" id="emailNovo" placeholder="Email" required />
+            <input type="password" id="senhaNova" placeholder="Senha" required />
+            <button type="submit" id="addUserButton">Adicionar Usuário</button>
+          </form>
         </div>
       </div>
     </div>
@@ -160,6 +197,44 @@
         editandoIndex = null;
         const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
         exibirCadastros(cadastros);
+      }
+
+      /**
+       * Adiciona um novo usuário ao localStorage
+       * @param {Event} event - Evento do formulário para prevenir reload
+       */
+      function adicionarUsuario(event) {
+        event.preventDefault();
+        const nome = document.getElementById("nomeNovo").value.trim();
+        const email = document.getElementById("emailNovo").value.trim();
+        const senha = document.getElementById("senhaNova").value.trim();
+
+        if (!nome || !email || !senha) {
+          alert("Preencha todos os campos!");
+          return;
+        }
+
+        const cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
+        cadastros.push({ nome, email, senha });
+        localStorage.setItem("cadastros", JSON.stringify(cadastros));
+
+        // Limpa o formulário
+        document.getElementById("addUserForm").reset();
+
+        // Atualiza a lista exibida
+        exibirCadastros(cadastros);
+      }
+
+      /**
+       * Alterna a visibilidade do formulário de adicionar usuário
+       */
+      function toggleAddUserForm() {
+        const formContainer = document.getElementById("addUserFormContainer");
+        if (formContainer.style.display === "none" || formContainer.style.display === "") {
+          formContainer.style.display = "block";
+        } else {
+          formContainer.style.display = "none";
+        }
       }
 
       // Inicialização: Carrega e exibe os cadastros
